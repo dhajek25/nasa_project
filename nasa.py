@@ -1,28 +1,9 @@
 import pandas as pd
 import numpy as np
-import datetime as dt
-import requests
-import credentials
+from api_connection import nasa_neows
 
-# creates variables with current date and date minus 7 days
-today = dt.date.today()
-week_ago = today - dt.timedelta(days=7)
-
-def nasa_neows():
-    """The function that connects to the Nasa NeoWs API and returns data for the latest 7 days"""
-    URL_NeoFeed = "https://api.nasa.gov/neo/rest/v1/feed"
-    params = {
-        'api_key': credentials.api_key,
-        'start_date':today,
-        'end_date':week_ago
-    }
-    try:
-        response = requests.get(URL_NeoFeed, params=params).json()
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
-    return response
-
-object_data = nasa_neows()
+if __name__ == '__main__':
+    object_data = nasa_neows()
 
 def data_extraction():
     """The function that processes the response data from the API and extracts the required information from the dictionary"""
@@ -41,11 +22,15 @@ def data_extraction():
             data_values = data_values.append(empty_df)
     return data_values
 
-data_values = data_extraction()
+def data_preparation():
+    data_values = data_extraction()
 
-# convert data to desired format and display
-data_values["date_full"] = pd.to_datetime(data_values["date_full"])
-data_values["miss_distance"] = pd.to_numeric(data_values["miss_distance"])
-data_values.sort_values(by=["miss_distance"], ascending=False, inplace=True)
-data_values.index = np.arange(1, len(data_values) + 1)
-print(data_values.head())
+    # convert data to desired format and display
+    data_values["date_full"] = pd.to_datetime(data_values["date_full"])
+    data_values["miss_distance"] = pd.to_numeric(data_values["miss_distance"])
+    data_values.sort_values(by=["miss_distance"], ascending=False, inplace=True)
+    data_values.index = np.arange(1, len(data_values) + 1)
+    return print(data_values.head())
+
+if __name__ == '__main__':
+    data_preparation()
