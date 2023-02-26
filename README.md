@@ -6,4 +6,4 @@ Nasa NeoWs (NearEarthObject Web-Service) is web service for near earth objects. 
 The result is the table with top 5 nearest object.
 
 ## Generate API Key
-You can generate your own API Key on https://api.nasa.gov/ 
+You can generate your own API Key on https://api.nasa.gov/ and save this created key in your foldert under credentials.py file.
